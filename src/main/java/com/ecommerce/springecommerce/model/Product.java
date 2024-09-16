@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product")
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,6 +20,9 @@ public class Product {
     private String image;
     private double price;
     private int quantity;
+    @ManyToOne
+    @JoinColumn(name = "user_id_user")
+    private User user;
 
     @Override
     public String toString() {

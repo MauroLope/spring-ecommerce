@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +21,13 @@ public class Order {
     private Date dateCreation;
     private Date dateReceipt;
     private Double total;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id_user")
+    private User user;
+
+    @OneToOne(mappedBy = "order")
+    private OrderDetail orderDetail;
 
     @Override
     public String toString() {

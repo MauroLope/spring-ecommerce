@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -24,6 +26,11 @@ public class User {
     private String phone;
     private String type;
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Product> products;
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 
     @Override
     public String toString() {

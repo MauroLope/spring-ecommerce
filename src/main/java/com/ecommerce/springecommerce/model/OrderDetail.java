@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "order_detail")
+@Table(name = "orders_detail")
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +18,12 @@ public class OrderDetail {
     private Double price;
     private int quantity;
     private String total;
+
+    @OneToOne
+    private Order order;
+
+    @ManyToOne
+    private Product product;
 
     @Override
     public String toString() {
