@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/products")
@@ -43,4 +45,21 @@ public class ProductController {
         return "redirect:/products";
     }
 
+    @GetMapping("/edit/{id}")
+    public String edit(@PathVariable Long id, Model model){
+        Product product = new Product();
+        Optional<Product> optionalProduct = productService.get(id);
+        product = optionalProduct.get();
+
+        LOGGER.info("este es el  producto buscado {}",product);
+        model.addAttribute("product", product);
+        return "products/edit";
+    }
+
+    @PostMapping("/update")
+    public String update(Product product){
+        LOGGER.info("este es el  producto actualizado {}",product);
+        productService.update(product);
+        return "redirect:/products";
+    }
 }
