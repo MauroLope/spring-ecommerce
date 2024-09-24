@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IProductService {
-    public Product save(Product product);
-    public Optional<Product> get(Long id);
-    public void update(Product product);
-    public void delete(Long id);
-    public List<Product> findAll();
+    Product save(Product product);
+    Optional<Product> get(Long id);
+    void update(Product product);
+    void delete(Long id);
+    List<Product> findAll();
 }

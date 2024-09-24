@@ -12,8 +12,12 @@ import java.util.Optional;
 @Service
 public class ProductService implements IProductService{
 
-    @Autowired
-    private IProductRepository productRepository;
+   private final IProductRepository productRepository;
+
+   @Autowired
+   public ProductService(IProductRepository productRepository) {
+       this.productRepository = productRepository;
+   }
 
     @Override
     public Product save(Product product) {
