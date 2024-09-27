@@ -53,16 +53,7 @@ public class ProductController {
             String nameImage = upload.saveImage(file);
             product.setImage(nameImage);
         } else {
-            if (file.isEmpty()) { //editamos el producto pero no cambiamos la imagen
-                Optional<Product> optionalProduct = productService.get(product.getId());
-                if (optionalProduct.isPresent()) {
-                    Product existingProduct = optionalProduct.get();
-                    product.setImage(existingProduct.getImage());
-                }
-            } else {
-                String nameImage = upload.saveImage(file);
-                product.setImage(nameImage);
-            }
+
         }
 
         productService.save(product);
@@ -117,14 +108,45 @@ private void processImageUpdate(Product product, MultipartFile file) throws IOEx
     }
 
     @PostMapping("/update")
-    public String update(Product product){
+    public String update(Product product,@RequestParam("img") MultipartFile file) throws IOException{
         LOGGER.info("este es el  producto actualizado {}",product);
+
+        // Verificamos si el archivo de imagen está vacío (no se subió una nueva imagen)
+        if (file.isEmpty()) {
+            Optional<Product> optionalProduct = productService.get(product.getId());
+            if (optionalProduct.isPresent()) {
+                Product existingProduct = optionalProduct.get();
+                product.setImage(existingProduct.getImage());
+            }
+        } else {
+            // Si no es una nueva imagen, obtenemos el producto actual de la base de datos
+            Optional<Product> optionalProduct = productService.get(product.getId());
+            if(optionalProduct.isPresent()) {
+                Product existingProduct = optionalProduct.get();
+
+                // Verificamos si la imagen no es la predeterminada y si no es null
+                if (existingProduct.getImage() != null && !existingProduct.getImage().equals("default.jpg")) {
+                    upload.deleteImage(existingProduct.getImage());
+                }
+
+                String nameImage = upload.saveImage(file);
+                product.setImage(nameImage);
+            }
+        }
         productService.update(product);
         return "redirect:/products";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id){
+
+        Product product = new Product();
+        product = productService.get(id).get();
+
+        if (!product.getImage().equals("default.jpg")) { //eliminar cuando no sea la imagen por defecto
+            upload.deleteImage(product.getImage());
+        }
+
         productService.delete(id);
         return "redirect:/products";
     }
